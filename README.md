@@ -43,6 +43,15 @@ Frontend highlights:
 | `src/pages/History.jsx` + `src/pages/ImageDetail.jsx` | Browsing prior analyses with detail view |
 | `src/hooks/useUploadAnalysis.js` | Encapsulates upload workflow and API calls |
 
+## Cloning the Project
+
+```bash
+git clone https://github.com/your-org-or-user/noise-ninja.git
+cd noise-ninja
+```
+
+If you use SSH keys, swap the URL accordingly (e.g., `git@github.com:your-org-or-user/noise-ninja.git`). After cloning, follow the backend and frontend setup steps below in separate terminals for the smoothest experience.
+
 ## Backend Setup
 
 1. **Create and activate a virtual environment** (examples use PowerShell on Windows):
@@ -160,11 +169,5 @@ To compare detector output against a labeled dataset:
 - **Logs**: The upload view prints noise/clone/metadata inputs plus the final decision path—handy while tuning thresholds.
 - **CORS/HTTPS**: When deploying, update `settings.py` with your allowed origins and serve media via a CDN or object storage.
 - **Testing Ideas**: Add unit tests under `detector/tests.py` to cover reasoning logic, metadata heuristics, and API contracts.
-
-## License & Attribution
-
-No explicit license has been declared. If you intend to open-source or distribute this project, add the appropriate license file and ensure third-party assets (fonts, icons, datasets) comply with their terms.
-
----
 
 Need help extending the pipeline (e.g., integrating SPN detectors, transformer-based forgery classifiers, or bulk dataset evaluation)? Open an issue or reach out with details—Noise Ninja is designed to be modular and easy to upgrade.
