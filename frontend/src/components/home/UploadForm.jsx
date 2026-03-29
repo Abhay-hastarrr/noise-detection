@@ -16,7 +16,7 @@ function UploadForm({
         {/* Title */}
         <div className="space-y-2">
           <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-            <ImagePlus className="w-6 h-6 text-violet-400" />
+            <ImagePlus className="w-6 h-6 text-indigo-400" />
             Upload Image
           </h3>
           <p className="text-sm text-gray-400">Choose an image to analyze for tampering</p>
@@ -34,10 +34,10 @@ function UploadForm({
               disabled={loading}
             />
             <div className={`input-modern cursor-pointer flex items-center justify-center gap-3 hover:bg-white/20 py-8 text-center transition-all ${
-              fileName ? 'bg-white/10 border-violet-500/50' : ''
+              fileName ? 'bg-white/10 border-indigo-500/50' : ''
             }`}>
               <div className="flex flex-col items-center gap-2">
-                <Upload className="w-6 h-6 text-violet-400 group-hover:scale-110 transition-transform" />
+                <Upload className="w-6 h-6 text-indigo-400 group-hover:scale-110 transition-transform" />
                 <div>
                   <p className="font-semibold text-white">
                     {fileName ? `Selected: ${fileName}` : 'Click to upload or drag & drop'}
@@ -48,7 +48,7 @@ function UploadForm({
             </div>
           </div>
           {fileName && (
-            <div className="flex items-center gap-2 text-violet-300">
+            <div className="flex items-center gap-2 text-indigo-300">
               <CheckCircle2 className="w-4 h-4" />
               <p className="text-xs font-medium">File ready for analysis</p>
             </div>
@@ -68,7 +68,7 @@ function UploadForm({
                 checked={simulateTamper}
                 onChange={(event) => onSimulateChange(event.target.checked)}
                 disabled={loading}
-                className="h-5 w-5 rounded border border-white/20 bg-white/10 checked:bg-gradient-to-r checked:from-violet-600 checked:to-purple-600 cursor-pointer transition-all accent-purple-600"
+                className="h-5 w-5 rounded border border-white/20 bg-white/10 checked:bg-gradient-to-r checked:from-indigo-600 checked:to-indigo-500 cursor-pointer transition-all accent-indigo-600"
               />
               <div className="flex-1">
                 <span className="text-sm font-medium text-white/80 group-hover:text-white/90 transition-colors block">
@@ -95,7 +95,7 @@ function UploadForm({
         <button
           type="submit"
           disabled={loading || !fileName}
-          className="w-full py-4 rounded-lg font-bold transition-all duration-300 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-95 text-lg"
+          className="w-full py-4 rounded-lg font-bold transition-all duration-300 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white shadow-lg shadow-indigo-500/20 hover:shadow-xl hover:shadow-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-[1.02] active:scale-95 text-lg"
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">

@@ -11,10 +11,10 @@ function ConfidenceBar({ value, label, color = 'purple' }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-white">{label}</span>
+        <span className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{label}</span>
         <span className="text-sm font-bold text-gradient-accent">{percentage.toFixed(1)}%</span>
       </div>
-      <div className="w-full h-2.5 rounded-full bg-white/10 overflow-hidden">
+      <div className="w-full h-2.5 rounded-full overflow-hidden" style={{ backgroundColor: 'var(--bg-tertiary)' }}>
         <div className={`h-full ${colorClass} transition-all duration-500`} style={{ width: `${percentage}%` }} />
       </div>
     </div>

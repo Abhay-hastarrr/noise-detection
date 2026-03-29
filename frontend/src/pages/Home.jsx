@@ -43,24 +43,33 @@ function Home() {
     <div className="min-h-screen flex flex-col">
       {/* Hero Section */}
       <div className="relative py-12 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-600/20 rounded-full mix-blend-multiply filter blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/20 rounded-full mix-blend-multiply filter blur-3xl"></div>
+        <div className="absolute inset-0 opacity-30" style={{
+          display: document.documentElement.getAttribute('data-theme') === 'light' ? 'block' : 'block'
+        }}>
+          <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl" style={{
+            backgroundColor: document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(99, 102, 241, 0.15)' : 'rgba(99, 102, 241, 0.2)'
+          }}></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full mix-blend-multiply filter blur-3xl" style={{
+            backgroundColor: document.documentElement.getAttribute('data-theme') === 'light' ? 'rgba(107, 114, 128, 0.1)' : 'rgba(71, 85, 105, 0.2)'
+          }}></div>
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <div className="inline-flex items-center justify-center gap-3 mb-4 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-            <div className="p-1.5 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600">
+          <div className="inline-flex items-center justify-center gap-3 mb-4 px-4 py-2 rounded-full" style={{
+            backgroundColor: 'var(--glass-bg)',
+            border: '1px solid var(--glass-border)'
+          }}>
+            <div className="p-1.5 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-sm font-semibold text-violet-300">AI-Powered Detection</span>
+            <span className="text-sm font-semibold" style={{ color: 'var(--accent-light)' }}>AI-Powered Detection</span>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-black text-gradient leading-tight">
             Detect Image Tampering With AI
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl max-w-3xl mx-auto" style={{ color: 'var(--text-secondary)' }}>
             Advanced image analysis to detect synthetic artifacts, cloning, noise, and digital manipulation
           </p>
         </div>
@@ -74,20 +83,20 @@ function Home() {
             <div className="grid lg:grid-cols-2 gap-8 items-center">
               {/* Left - Features */}
               <div className="space-y-6 order-2 lg:order-1">
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-8">Why Choose Noise Ninja?</h2>
+                <h2 className="text-3xl md:text-4xl font-bold mb-8" style={{ color: 'var(--text-primary)' }}>Why Choose Noise Ninja?</h2>
                 
                 {features.map((feature, idx) => {
                   const Icon = feature.icon
                   return (
                     <div key={idx} className="flex gap-4">
                       <div className="flex-shrink-0">
-                        <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600">
+                        <div className="flex items-center justify-center h-12 w-12 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500">
                           <Icon className="h-6 w-6 text-white" />
                         </div>
                       </div>
                       <div>
-                        <h3 className="text-xl font-bold text-white mb-1">{feature.title}</h3>
-                        <p className="text-gray-400">{feature.description}</p>
+                        <h3 className="text-xl font-bold mb-1" style={{ color: 'var(--text-primary)' }}>{feature.title}</h3>
+                        <p style={{ color: 'var(--text-tertiary)' }}>{feature.description}</p>
                       </div>
                     </div>
                   )

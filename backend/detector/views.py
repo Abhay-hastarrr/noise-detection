@@ -28,7 +28,7 @@ class UploadImageView(APIView):
         analysis = ImageAnalysis.objects.create(original_image=uploaded_file)
 
         simulate_flag = request.query_params.get('simulate', 'false').lower() == 'true'
-        analysis.actual_result = simulate_flag
+        analysis.actual_result = True if simulate_flag else None
         tampered_path: str | None = None
 
         if simulate_flag:

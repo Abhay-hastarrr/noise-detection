@@ -24,7 +24,7 @@ function HistoryCard({ item }) {
 
   return (
     <Card 
-      className="p-0 overflow-hidden hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer" 
+      className="p-0 overflow-hidden hover:shadow-2xl hover:shadow-indigo-500/15 transition-all duration-300 cursor-pointer" 
       variant="default"
       onClick={handleCardClick}
     >
@@ -66,7 +66,7 @@ function HistoryCard({ item }) {
           {item.noise_confidence !== undefined && (
             <div className="glass-sm rounded-lg p-3 space-y-1">
               <p className="text-xs text-gray-400">Noise</p>
-              <p className="text-lg font-bold text-violet-400">
+              <p className="text-lg font-bold text-indigo-400">
                 {typeof item.noise_confidence === 'number' ? `${(item.noise_confidence * 100).toFixed(0)}%` : '—'}
               </p>
             </div>

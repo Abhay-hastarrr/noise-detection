@@ -1,5 +1,6 @@
 import Card from '../common/Card'
-import { Target, BarChart3, FileText, Image, CheckCircle2, AlertTriangle, Search, Camera, HardDrive, AlertCircle, Flame, Radar } from 'lucide-react'
+import { Target, BarChart3, FileText, Image, CheckCircle2, AlertTriangle, Search, Camera, HardDrive, AlertCircle, Flame, Radar, ChevronDown } from 'lucide-react'
+import { useState } from 'react'
 
 const metricConfig = [
   { key: 'predicted_result', label: 'Predicted Result' },
@@ -38,6 +39,9 @@ function formatValue(key, value) {
 }
 
 function AnalysisResult({ result }) {
+  const [activeTab, setActiveTab] = useState('overview')
+  const [expandedSections, setExpandedSections] = useState({})
+
   if (!result) return null
 
   const confidence = result.confidence ? `${(result.confidence * 100).toFixed(1)}%` : '—'
@@ -72,99 +76,164 @@ function AnalysisResult({ result }) {
     },
   ].filter(Boolean)
 
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: Target },
+    { id: 'metrics', label: 'Metrics', icon: BarChart3 },
+    { id: 'forensics', label: 'Forensics', icon: Image },
+    { id: 'metadata', label: 'Metadata', icon: Search },
+  ]
+
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }))
+  }
+
   return (
     <div className="space-y-6">
-      {/* Main Result Card */}
-      <Card className="p-8 space-y-6" variant="elevated">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <Target className="w-8 h-8 text-violet-400" />
-            <h2 className="text-3xl font-bold text-gradient">Analysis Complete</h2>
-          </div>
-          <p className="text-sm text-gray-400">Detailed results from the image analysis</p>
+      {/* Premium Tab Navigation */}
+      <Card className="p-2" variant="elevated">
+        <div className="flex gap-2 overflow-x-auto">
+          {tabs.map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              onClick={() => setActiveTab(id)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg whitespace-nowrap transition-all duration-300 text-sm font-medium ${
+                activeTab === id
+                  ? 'bg-gradient-to-r from-indigo-600 to-indigo-500 text-white shadow-lg shadow-indigo-500/20'
+                  : 'text-gray-400 hover:text-gray-200 hover:bg-white/5'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {label}
+            </button>
+          ))}
         </div>
+      </Card>
 
-        {/* Result Status */}
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Predicted Result - Large */}
-            <div className="glass-sm rounded-xl p-6 space-y-2">
-              <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Detection Result</p>
-              <div className="text-2xl font-bold">
-                {getPredictedBadge(result.predicted_result)}
+      {/* Overview Tab */}
+      {activeTab === 'overview' && (
+        <div className="space-y-6">
+          {/* Main Result Card */}
+          <Card className="p-8 space-y-6" variant="elevated">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500">
+                  <Target className="w-6 h-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gradient">Analysis Result</h2>
               </div>
             </div>
 
-            {/* Overall Confidence */}
-            <div className="glass-sm rounded-xl p-6 space-y-2">
-              <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Overall Confidence</p>
-              <div className="text-2xl font-bold text-gradient-accent">{confidence}</div>
-            </div>
-          </div>
+            {/* Result Status - Large Display */}
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Predicted Result */}
+                <div className="glass-sm rounded-xl p-6 space-y-3">
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Detection Result</p>
+                  <div className="text-2xl font-bold">
+                    {getPredictedBadge(result.predicted_result)}
+                  </div>
+                </div>
 
-          {result.decision_reason && (
-            <div className="glass-sm rounded-xl p-6 space-y-2">
-              <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Decision Rationale</p>
-              <p className="text-sm text-gray-200 leading-relaxed">{result.decision_reason}</p>
+                {/* Confidence Gauge */}
+                <div className="glass-sm rounded-xl p-6 space-y-4">
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Confidence Score</p>
+                  <div className="space-y-3">
+                    <div className="text-3xl font-bold text-gradient-accent">{confidence}</div>
+                    <div className="w-full bg-white/5 rounded-full h-2 border border-white/10 overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-slate-400 to-slate-500"
+                        style={{ width: `${(parseFloat(confidence) || 0)}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {result.decision_reason && (
+                <div className="glass-sm rounded-xl p-6 space-y-2">
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Decision Rationale</p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--text-secondary)' }}>{result.decision_reason}</p>
+                </div>
+              )}
             </div>
+          </Card>
+
+          {/* Quick Insights */}
+          {result.metadata_details && (
+            <Card className="p-6 space-y-4" variant="elevated">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="w-5 h-5 text-indigo-400" />
+                <h3 className="font-semibold text-white">Key Findings</h3>
+              </div>
+              <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{result.metadata_details}</p>
+            </Card>
           )}
         </div>
-      </Card>
+      )}
 
-      {/* Detailed Metrics */}
-      <Card className="p-8 space-y-6" variant="elevated">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <BarChart3 className="w-6 h-6 text-violet-400" />
-            <h3 className="text-xl font-bold text-white">Confidence Breakdown</h3>
-          </div>
-          <p className="text-sm text-gray-400">Individual analysis metrics</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {metricConfig.map(({ key, label }) => {
-            if (key === 'predicted_result') return null
-            const value = result[key]
-            return (
-              <div key={key} className="glass-sm rounded-lg p-4 space-y-2">
-                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">{label}</p>
-                <p className="text-lg font-bold text-gradient-accent">
-                  {typeof value === 'number' ? `${(value * 100).toFixed(1)}%` : value ?? '—'}
-                </p>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Metadata Details */}
-        {result.metadata_details && (
-          <div className="glass-sm rounded-lg p-6 space-y-3">
-            <p className="text-sm font-semibold text-white uppercase tracking-wider flex items-center gap-2"><FileText className="w-4 h-4" /> Metadata Details</p>
-            <p className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{result.metadata_details}</p>
-          </div>
-        )}
-      </Card>
-
-      {/* Metadata Panel */}
-      <MetadataPanel metadata={metadataPayload} />
-
-      {/* Forensic Visuals */}
-      {forensicVisuals.length > 0 && (
+      {/* Metrics Tab */}
+      {activeTab === 'metrics' && (
         <Card className="p-8 space-y-6" variant="elevated">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
-              <Image className="w-5 h-5 text-violet-400" />
-              <h3 className="text-lg font-bold text-white">Forensic Visuals</h3>
+              <div className="p-2 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500">
+                <BarChart3 className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white">Confidence Breakdown</h3>
             </div>
-            <p className="text-sm text-gray-400">Original reference and generated overlays</p>
+            <p className="text-sm text-gray-400">Individual analysis metrics with visual indicators</p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {metricConfig.map(({ key, label }) => {
+              if (key === 'predicted_result') return null
+              const value = result[key]
+              const numValue = typeof value === 'number' ? value : 0
+              const percentage = (numValue * 100).toFixed(1)
+              
+              return (
+                <div key={key} className="glass-sm rounded-lg p-5 space-y-4">
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm font-medium text-gray-300">{label}</p>
+                    <p className="text-lg font-bold text-gradient-accent">{percentage}%</p>
+                  </div>
+                  <div className="w-full bg-white/5 rounded-full h-2.5 border border-white/10 overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-indigo-500 to-indigo-400 transition-all duration-500"
+                      style={{ width: `${percentage}%` }}
+                    />
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </Card>
+      )}
+
+      {/* Forensics Tab */}
+      {activeTab === 'forensics' && forensicVisuals.length > 0 && (
+        <Card className="p-8 space-y-6" variant="elevated">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500">
+                <Image className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white">Forensic Analysis</h3>
+            </div>
+            <p className="text-sm text-gray-400">Visual artifacts and detection overlays</p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 auto-rows-max">
             {forensicVisuals.map(({ id, ...visual }) => (
               <ForensicImage key={id} {...visual} />
             ))}
           </div>
         </Card>
+      )}
+
+      {/* Metadata Tab */}
+      {activeTab === 'metadata' && (
+        <MetadataPanel metadata={metadataPayload} expandedSections={expandedSections} toggleSection={toggleSection} />
       )}
     </div>
   )
@@ -172,7 +241,7 @@ function AnalysisResult({ result }) {
 
 export default AnalysisResult
 
-function MetadataPanel({ metadata }) {
+function MetadataPanel({ metadata, expandedSections, toggleSection }) {
   if (!metadata) return null
 
   const exifEntries = metadata.exif ?? {}
@@ -180,48 +249,126 @@ function MetadataPanel({ metadata }) {
   const fileInfo = metadata.file_info ?? {}
   const analysisItems = metadata.analysis ?? []
 
+  const sections = [
+    {
+      id: 'exif',
+      title: 'EXIF Metadata',
+      icon: Camera,
+      content: Object.keys(exifEntries).length === 0 ? (
+        <p style={{ color: 'var(--text-tertiary)' }}>No EXIF metadata found</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          {Object.entries(exifEntries).map(([key, value]) => (
+            <div key={key} className="text-sm">
+              <span style={{ color: 'var(--text-tertiary)' }}>{key}:</span>
+              <span className="ml-2 font-medium" style={{ color: 'var(--text-secondary)' }}>{String(value)}</span>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+    {
+      id: 'image',
+      title: 'Image Information',
+      icon: Image,
+      content: (
+        <div className="space-y-2">
+          <div className="text-sm"><span style={{ color: 'var(--text-tertiary)' }}>Format:</span> <span className="ml-2 font-medium" style={{ color: 'var(--text-secondary)' }}>{imageInfo.format ?? 'Unknown'}</span></div>
+          <div className="text-sm"><span style={{ color: 'var(--text-tertiary)' }}>Resolution:</span> <span className="ml-2 font-medium" style={{ color: 'var(--text-secondary)' }}>{imageInfo.width ?? '—'} × {imageInfo.height ?? '—'}</span></div>
+          <div className="text-sm"><span style={{ color: 'var(--text-tertiary)' }}>Mode:</span> <span className="ml-2 font-medium" style={{ color: 'var(--text-secondary)' }}>{imageInfo.mode ?? '—'}</span></div>
+        </div>
+      ),
+    },
+    {
+      id: 'file',
+      title: 'File Information',
+      icon: HardDrive,
+      content: (
+        <div className="space-y-2">
+          <div className="text-sm"><span style={{ color: 'var(--text-tertiary)' }}>Size:</span> <span className="ml-2 font-medium" style={{ color: 'var(--text-secondary)' }}>{fileInfo.size_kb ?? '—'} KB</span></div>
+          <div className="text-sm"><span style={{ color: 'var(--text-tertiary)' }}>Created:</span> <span className="ml-2 font-medium" style={{ color: 'var(--text-secondary)' }}>{fileInfo.created ?? '—'}</span></div>
+          <div className="text-sm"><span style={{ color: 'var(--text-tertiary)' }}>Modified:</span> <span className="ml-2 font-medium" style={{ color: 'var(--text-secondary)' }}>{fileInfo.modified ?? '—'}</span></div>
+        </div>
+      ),
+    },
+    {
+      id: 'analysis',
+      title: 'Analysis Findings',
+      icon: AlertCircle,
+      content: analysisItems && analysisItems.length > 0 ? (
+        <ul className="space-y-1">
+          {analysisItems.map((item, index) => (
+            <li key={`analysis-${index}`} className="text-sm" style={{ color: 'var(--text-secondary)' }}>• {item}</li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>No metadata anomalies detected</p>
+      ),
+    },
+  ]
+
   return (
-    <div className="metadata-panel space-y-5">
-      <h2 className="flex items-center gap-2"><Search className="w-5 h-5 text-violet-400" /> Metadata Analysis</h2>
-
-      <div className="metadata-section">
-        <h3 className="flex items-center gap-2"><Camera className="w-4 h-4 text-violet-400" /> EXIF Metadata</h3>
-        {Object.keys(exifEntries).length === 0 ? (
-          <p>No EXIF metadata found</p>
-        ) : (
-          <div className="metadata-grid">
-            {Object.entries(exifEntries).map(([key, value]) => (
-              <p key={key}><strong>{key}:</strong> {String(value)}</p>
-            ))}
+    <Card className="p-6 space-y-4" variant="elevated">
+      <div className="space-y-2">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-500">
+            <Search className="w-6 h-6 text-white" />
           </div>
-        )}
+          <h2 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Metadata Details</h2>
+        </div>
+        <p className="text-sm" style={{ color: 'var(--text-tertiary)' }}>File metadata and forensic analysis</p>
       </div>
 
-      <div className="metadata-section">
-        <h3 className="flex items-center gap-2"><Image className="w-4 h-4 text-violet-400" /> Image Info</h3>
-        <p>Format: {imageInfo.format ?? 'Unknown'}</p>
-        <p>Resolution: {imageInfo.width ?? '—'} x {imageInfo.height ?? '—'}</p>
-        <p>Mode: {imageInfo.mode ?? '—'}</p>
+      <div className="space-y-3">
+        {sections.map(({ id, title, icon: Icon, content }) => (
+          <div
+            key={id}
+            className="rounded-lg overflow-hidden transition-all"
+            style={{ border: `1px solid var(--border-color)` }}
+          >
+            <button
+              onClick={() => toggleSection(id)}
+              className="w-full px-5 py-4 flex items-center justify-between transition-colors"
+              style={{
+                backgroundColor: expandedSections[id]
+                  ? 'var(--glass-bg)'
+                  : 'transparent',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <Icon className="w-4 h-4 text-indigo-400" />
+                <p
+                  className="text-sm font-semibold"
+                  style={{ color: 'var(--text-primary)' }}
+                >
+                  {title}
+                </p>
+              </div>
+              <ChevronDown
+                className="w-5 h-5 transition-transform duration-300"
+                style={{
+                  color: 'var(--text-tertiary)',
+                  transform: expandedSections[id]
+                    ? 'rotate(180deg)'
+                    : 'rotate(0deg)',
+                }}
+              />
+            </button>
+            {expandedSections[id] && (
+              <div
+                className="px-5 py-4 border-t space-y-2"
+                style={{
+                  backgroundColor: 'var(--bg-secondary)',
+                  borderColor: 'var(--border-color)',
+                }}
+              >
+                {content}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-
-      <div className="metadata-section">
-        <h3 className="flex items-center gap-2"><HardDrive className="w-4 h-4 text-violet-400" /> File Info</h3>
-        <p>Size: {fileInfo.size_kb ?? '—'} KB</p>
-        <p>Created: {fileInfo.created ?? '—'}</p>
-        <p>Modified: {fileInfo.modified ?? '—'}</p>
-      </div>
-
-      <div className="metadata-section">
-        <h3 className="flex items-center gap-2"><AlertCircle className="w-4 h-4 text-violet-400" /> Analysis</h3>
-        {analysisItems && analysisItems.length > 0 ? (
-          analysisItems.map((item, index) => (
-            <p key={`analysis-${index}`}>• {item}</p>
-          ))
-        ) : (
-          <p>No metadata anomalies detected</p>
-        )}
-      </div>
-    </div>
+    </Card>
   )
 }
 
