@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #7c3aed;
+  --color-primary-light: #a78bfa;
+  --color-primary-dark: #5b21b6;
+  --color-surface: #0f172a;
+  --color-surface-light: #1e293b;
+  --color-surface-lighter: #334155;
+  --color-accent: #06b6d4;
+  --font-sans: 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-gray-100 font-sans antialiased;
+    min-height: 100vh;
+    scrollbar-width: none;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Smooth scrollbar */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Glass effect utilities */
+.glass {
+  @apply bg-white/5 backdrop-blur-xl border border-white/10;
+}
+
+.glass-sm {
+  @apply bg-white/3 backdrop-blur-lg border border-white/5;
+}
+
+/* Gradient utilities */
+.gradient-primary {
+  @apply bg-gradient-to-r from-violet-500 via-purple-500 to-pink-500;
+}
+
+.gradient-accent {
+  @apply bg-gradient-to-r from-cyan-400 to-blue-500;
+}
+
+/* Text gradients */
+.text-gradient {
+  @apply bg-gradient-to-r from-violet-400 via-purple-400 to-pink-400 bg-clip-text text-transparent;
+}
+
+.text-gradient-accent {
+  @apply bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent;
+}
+
+/* Button utilities */
+.btn-primary {
+  @apply px-6 py-2.5 rounded-lg font-medium transition-all duration-300 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white shadow-lg shadow-purple-500/30 hover:shadow-xl hover:shadow-purple-500/40 hover:scale-105;
+}
+
+.btn-secondary {
+  @apply px-6 py-2.5 rounded-lg font-medium transition-all duration-300 bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30;
+}
+
+.btn-accent {
+  @apply px-6 py-2.5 rounded-lg font-medium transition-all duration-300 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white shadow-lg shadow-cyan-500/30 hover:shadow-xl hover:shadow-cyan-500/40;
+}
+
+/* Input utilities */
+.input-modern {
+  @apply w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-gray-500 transition-all duration-300 focus:outline-none focus:border-violet-500/50 focus:bg-white/10 focus:shadow-lg focus:shadow-violet-500/20 hover:border-white/20;
+}
+
+/* Card utilities */
+.card-premium {
+  @apply rounded-2xl transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10;
+}
+
+/* Badge utilities */
+.badge-success {
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-green-500/20 text-green-300 border border-green-500/30;
+}
+
+.badge-warning {
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-orange-500/20 text-orange-300 border border-orange-500/30;
+}
+
+.badge-danger {
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-red-500/20 text-red-300 border border-red-500/30;
+}
+
+/* Forensic metadata panel */
+.metadata-panel {
+  background: #0f172a;
+  color: #e5e7eb;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(56, 189, 248, 0.15);
+  box-shadow: 0 20px 55px rgba(15, 23, 42, 0.6);
+}
+
+.metadata-panel h2 {
+  color: #22c55e;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.metadata-panel h3 {
+  color: #38bdf8;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.metadata-section {
+  background: #1e293b;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  border-left: 4px solid #22c55e;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.05);
+}
+
+.metadata-panel p {
+  margin: 0.25rem 0;
+  color: #cbd5f5;
+  font-size: 0.95rem;
+}
+
+.metadata-panel strong {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+.metadata-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.5rem 1.5rem;
+}
+
