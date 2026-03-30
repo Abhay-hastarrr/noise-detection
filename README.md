@@ -33,6 +33,7 @@ Key backend modules:
 | `detector/utils/ela.py` | Error Level Analysis rendering |
 | `detector/utils/reasoning.py` | Generates human-readable explanations for each verdict |
 | `scripts/cov_calibrate.py` | CLI helper to measure noise CoV across sample sets |
+| `scripts/evaluate_dataset.py` | Offline evaluator that runs all detectors on labeled folders, exports metrics, and seeds the dashboard |
 
 Frontend highlights:
 
