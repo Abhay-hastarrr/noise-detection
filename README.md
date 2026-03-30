@@ -80,6 +80,31 @@ If you use SSH keys, swap the URL accordingly (e.g., `git@github.com:your-org-or
 - Default settings assume DEBUG on and `MEDIA_URL=/media/`. If you deploy elsewhere, ensure the frontend’s `API baseURL` and static/media hosting match.
 - CORS is enabled via `django-cors-headers`; configure allowed origins in `settings.py` if hosting the frontend separately.
 
+### Recreating the Database After Cloning
+
+Since `db.sqlite3` is not committed, every fresh clone needs to initialize its own database file:
+
+1. Open a terminal in `backend/` and create/activate a virtual environment (see steps above).
+2. Install dependencies with `pip install -r requirements.txt` (already covered in Backend Setup).
+3. Run migrations to create an empty SQLite file:
+   ```powershell
+   python manage.py migrate
+   ```
+4. (Optional) Create an admin account for `/admin/` access:
+   ```powershell
+   python manage.py createsuperuser
+   ```
+5. (Optional but recommended) If you want the "Offline Benchmark" card to show metrics, copy your labeled datasets into `backend/detector/datasets/{clean,tampered}` (or adjust the script paths) and run the evaluator:
+   ```powershell
+   python scripts/evaluate_dataset.py ^
+     --clean-dir detector/datasets/clean ^
+     --tampered-dir detector/datasets/tampered ^
+     --label "Fresh Clone Smoke Test"
+   ```
+   Add `--csv`/`--json` if you want exported reports. Each run writes metrics into the `DatasetEvaluation` table so the frontend reflects them immediately.
+
+Repeat these steps any time you intentionally remove `db.sqlite3` (e.g., after `python manage.py flush`).
+
 ## Frontend Setup
 
 1. Install dependencies:
