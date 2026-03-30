@@ -3,7 +3,7 @@ from pathlib import Path
 from django.conf import settings
 from rest_framework import serializers
 
-from .models import ImageAnalysis
+from .models import ImageAnalysis, DatasetEvaluation
 from .utils.reasoning import build_decision_reason
 
 
@@ -108,4 +108,23 @@ class ImageAnalysisSerializer(serializers.ModelSerializer):
             getattr(obj, 'metadata_confidence', None),
             getattr(obj, 'confidence', None),
             getattr(obj, 'predicted_result', None),
+        )
+
+
+class DatasetEvaluationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DatasetEvaluation
+        fields = (
+            'id',
+            'label',
+            'total_samples',
+            'true_positive',
+            'true_negative',
+            'false_positive',
+            'false_negative',
+            'accuracy',
+            'precision',
+            'recall',
+            'f1',
+            'created_at',
         )

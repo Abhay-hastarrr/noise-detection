@@ -8,8 +8,8 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import ImageAnalysis
-from .serializers import ImageAnalysisSerializer
+from .models import ImageAnalysis, DatasetEvaluation
+from .serializers import ImageAnalysisSerializer, DatasetEvaluationSerializer
 from .utils.clone_detection import detect_clone, generate_heatmap
 from .utils.ela import perform_ela
 from .utils.metadata import analyze_metadata
@@ -263,3 +263,13 @@ class AnalysisDetailView(APIView):
             return Response(serializer.data)
         except ImageAnalysis.DoesNotExist:
             return Response({'error': 'Analysis not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class DatasetEvaluationView(APIView):
+    def get(self, request: HttpRequest, *args, **kwargs):
+        evaluation = DatasetEvaluation.objects.order_by('-created_at').first()
+        if not evaluation:
+            return Response({'has_data': False}, status=status.HTTP_200_OK)
+
+        serializer = DatasetEvaluationSerializer(evaluation, context={'request': request})
+        return Response({'has_data': True, 'metrics': serializer.data})

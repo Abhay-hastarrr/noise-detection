@@ -38,3 +38,24 @@ class ImageAnalysis(models.Model):
 
     def __str__(self) -> str:
         return f"ImageAnalysis #{self.pk or 'unsaved'}"
+
+
+class DatasetEvaluation(models.Model):
+    label = models.CharField(max_length=120, blank=True)
+    total_samples = models.PositiveIntegerField(default=0)
+    true_positive = models.PositiveIntegerField(default=0)
+    true_negative = models.PositiveIntegerField(default=0)
+    false_positive = models.PositiveIntegerField(default=0)
+    false_negative = models.PositiveIntegerField(default=0)
+    accuracy = models.FloatField(default=0.0)
+    precision = models.FloatField(default=0.0)
+    recall = models.FloatField(default=0.0)
+    f1 = models.FloatField(default=0.0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self) -> str:
+        label = f"{self.label} " if self.label else ""
+        return f"DatasetEvaluation {label}@ {self.created_at:%Y-%m-%d %H:%M:%S}"

@@ -1,8 +1,9 @@
 import Accuracy from '../components/Accuracy'
+import DatasetEvaluation from '../components/DatasetEvaluation'
 import AnalysisResult from '../components/home/AnalysisResult'
 import UploadForm from '../components/home/UploadForm'
 import useUploadAnalysis from '../hooks/useUploadAnalysis'
-import { Zap, Shield, Brain, Zap as FastIcon } from 'lucide-react'
+import { Zap, Shield, Waves, FileSearch } from 'lucide-react'
 
 function Home() {
   const {
@@ -24,18 +25,18 @@ function Home() {
   const features = [
     {
       icon: Shield,
-      title: 'Advanced Detection',
-      description: 'AI-powered analysis for tampering artifacts'
+      title: 'Copy-Move Forensics',
+      description: 'OpenCV block matching, contour filtering, and Pillow overlays expose cloned regions with pixel-level heatmaps.'
     },
     {
-      icon: Brain,
-      title: 'Deep Learning',
-      description: 'Neural networks trained on thousands of images'
+      icon: Waves,
+      title: 'Noise Residual Profiling',
+      description: 'NumPy-driven coefficient-of-variation scores track block-wise noise statistics to surface resampling and recompression artifacts.'
     },
     {
-      icon: FastIcon,
-      title: 'Instant Results',
-      description: 'Get results in seconds with high accuracy'
+      icon: FileSearch,
+      title: 'Metadata Intelligence',
+      description: 'EXIF normalization, compression signature checks, and file-structure heuristics flag suspicious editing pipelines.'
     }
   ]
 
@@ -120,7 +121,10 @@ function Home() {
             {/* Accuracy Stats Section */}
             <div className="mt-12 pt-8 border-t border-white/10">
               <h3 className="text-2xl font-bold text-white mb-8">Our Performance</h3>
-              <Accuracy />
+              <div className="grid gap-6 md:grid-cols-2">
+                <Accuracy />
+                <DatasetEvaluation />
+              </div>
             </div>
           </div>
         ) : (
@@ -151,6 +155,7 @@ function Home() {
                 </div>
                 <div className="space-y-8">
                   <Accuracy />
+                  <DatasetEvaluation />
                 </div>
               </div>
             ) : null}

@@ -72,7 +72,7 @@ If you use SSH keys, swap the URL accordingly (e.g., `git@github.com:your-org-or
    Media folders (`media/original`, `media/tampered`, `media/analysis/ela`, `media/analysis/heatmaps`) will be created automatically on first use, but you can pre-create them if desired.
 4. **Run the API**:
    ```powershell
-   python manage.py runserver 0.0.0.0:8000
+   python manage.py runserver
    ```
 
 ### Environment Notes
@@ -141,7 +141,7 @@ Sample upload response (truncated):
 - **Clone Heatmap**: Colorized overlay marking detected hotspots. Saved to `media/analysis/heatmaps/<basename>_heatmap.jpg`.
 - URLs are exposed via the serializer so the React dashboard can render them under “Forensic Visuals.”
 
-## Noise CoV Calibration Script
+## Dataset Evaluation & Calibration Tools
 
 Use `backend/scripts/cov_calibrate.py` to understand how your dataset’s clean vs tampered samples distribute their coefficient of variation.
 
@@ -151,6 +151,20 @@ python scripts/cov_calibrate.py path/to/clean/*.jpg path/to/tampered/*.jpg
 ```
 
 The script prints `CoV=...` per file so you can fine-tune the breakpoints in `utils/noise_detection.py`. This is especially helpful when introducing a new dataset or camera profile.
+
+For full end-to-end evaluation without hitting the HTTP API, run `backend/scripts/evaluate_dataset.py`:
+
+```bash
+cd backend
+python scripts/evaluate_dataset.py \
+   --clean-dir detector/datasets/clean \
+   --tampered-dir detector/datasets/tampered \
+   --csv results.csv \
+   --json results.json \
+   --label "Baseline Benchmark"
+```
+
+The evaluator reuses the same metadata/noise/clone detectors and scoring logic as the upload endpoint, then prints accuracy/precision/recall/F1 plus optional CSV/JSON exports showing each sample's confidences and decision reason. Every run also persists its aggregate metrics (label, confusion matrix, percentages, timestamp) into the `DatasetEvaluation` table, which powers the `/api/dataset-evaluation/` endpoint and the "Offline Benchmark" card on the homepage.
 
 ## Working With Datasets
 
